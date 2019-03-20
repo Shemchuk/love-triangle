@@ -3,31 +3,23 @@
  * @returns number of love triangles
  */
 module.exports = function getLoveTrianglesCount(preferences = []) {
-  let skp = [];
-  let res = 0;
+  let count = 0;
 
-  for (i in preferences) {
-    if (skp.indexOf(i * 1) > -1) {
-      continue;
-    }
-    let first = [preferences[i], i * 1];
-    let last = first;
-    let s = [];
+  preferences = preferences.map( item => item - 1);
 
-    for (j = 1; j < 4; j++) {
+  for (let i = 0; i < preferences.length; i++) {
+    first = preferences[i]; //whom love first lover
+    second = preferences[first];  //whom love second lover
+    third = preferences[second];  //whom love third lover
 
-      if (last.join() == [preferences[last[0] - 1], last[0] - 1].join()) {
-        last = [];
-        break;
-      }
-      last = [preferences[last[0] - 1], last[0] - 1];
-      s.push(last[0] - 1);
-    }
-
-    if (first.join() == last.join()) {
-      res++;
-      skp = skp.concat(s)
+    //if 3rd lover love 1st lover in chain - then it's a love triangle
+    if ((i == third) && (first != second) && (second != third)) {
+      preferences[i] = -1;  //exclude this triangle from cheking
+      preferences[first] = -1;
+      preferences[third] = -1;
+      count++;
     }
   }
-  return res;
+
+  return count;
 };
